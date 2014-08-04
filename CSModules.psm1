@@ -2,10 +2,6 @@
 $Host.PrivateData.DebugBackgroundColor = "Black"
 $Host.PrivateData.ErrorBackgroundColor = "Black"
 
-# Start Up
-Get-Content("C:\bin\banner.txt")
-cd $env:USERPROFILE\
-
 # Fancy Pants Custom Prompt
 function prompt
 {
@@ -78,4 +74,9 @@ function lastloguser($user)
 	Get-ADUser $user -Properties LastLogonDate | Select Name, LastLogonDate
 }
 
-startAD
+function md5-check($someFilePath)
+{
+    $md5 = new-object -TypeName System.Security.Cryptography.MD5CryptoServiceProvider
+    $hash = [System.BitConverter]::ToString($md5.ComputeHash([System.IO.File]::ReadAllBytes($someFilePath)))
+    echo $hash
+}
