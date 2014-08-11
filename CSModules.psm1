@@ -3,17 +3,16 @@ $Host.PrivateData.DebugBackgroundColor = "Black"
 $Host.PrivateData.ErrorBackgroundColor = "Black"
 
 # Fancy Pants Custom Prompt
-function prompt
+function prompt()
 {
     Write-Host("[ ") -nonewline -foregroundcolor "Cyan"
     Write-Host($PWD) -nonewline -foregroundcolor "Cyan"
     Write-Host(" ]") -foregroundcolor "Cyan"
-    Write-VcsStatus -nonewline
     Write-Host(">") -nonewline -foregroundcolor "Yellow"
     return " "
 }
 
-function vpr
+function vpr()
 {
     ise $profile
 }
@@ -44,7 +43,7 @@ function rdp($site)
     }
 }
 
-function deliverFinger()
+function Deliver-Finger()
 {
 [string]$private:Finger = @"
 DQoJICAgICAgICAgLyJcDQoJICAgICAgICB8XC4vfA0KCSAgICAgICAgfCAgIHwNCgkgICAgICAgIHwgICB8DQoJ
@@ -62,21 +61,26 @@ function psr($pc)
     Enter-PSSession -ComputerName $pc
 }
 
-function startAD()
+function Start-AD()
 {
     $session = New-PSSession -ComputerName Chapman
-    Invoke-Command -Session $session {Import-Module ActiveDirectory}
-    Import-PSSession $session -Module ActiveDirectory
+    Invoke-Command -Session $session -Scriptblock { Import-Module ActiveDirectory }
+    Import-PSSession -session $session -Module ActiveDirectory -AllowClobber
 }
 
-function lastloguser($user)
+function Get-ADUserLastlog($user)
 {
 	Get-ADUser $user -Properties LastLogonDate | Select Name, LastLogonDate
 }
 
-function md5-check($someFilePath)
+function Get-MD5($someFilePath)
 {
     $md5 = new-object -TypeName System.Security.Cryptography.MD5CryptoServiceProvider
     $hash = [System.BitConverter]::ToString($md5.ComputeHash([System.IO.File]::ReadAllBytes($someFilePath)))
     echo $hash
+}
+
+function Find-Computer($hostname)
+{
+    Get-ADComputer -Identity crit$hostname -Properties Description | Select Name, Description
 }
