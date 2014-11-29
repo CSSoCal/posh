@@ -61,12 +61,7 @@ function psr($pc)
     Enter-PSSession -ComputerName $pc
 }
 
-function Start-AD()
-{
-    $session = New-PSSession -ComputerName Chapman
-    Invoke-Command -Session $session -Scriptblock { Import-Module ActiveDirectory }
-    Import-PSSession -session $session -Module ActiveDirectory -AllowClobber
-}
+
 
 function Get-ADUserLastlog($user)
 {
@@ -83,4 +78,9 @@ function Get-MD5($someFilePath)
 function Find-Computer($hostname)
 {
     Get-ADComputer -Identity crit$hostname -Properties Description | Select Name, Description
+}
+
+function Find-User($name)
+{
+	Get-ADComputer -Filter "Description -like '$name*'" -Properties * | Select Name, Description
 }
